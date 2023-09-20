@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "arby", "Arby.Lib\arby.cspro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arby.Test", "Arby.Test\Arby.Test.csproj", "{C2FEC797-925D-47F5-A65E-C336DBCC154E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{FF03A00D-1687-49CA-A605-B1D57C154BF5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{C2FEC797-925D-47F5-A65E-C336DBCC154E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2FEC797-925D-47F5-A65E-C336DBCC154E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2FEC797-925D-47F5-A65E-C336DBCC154E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF03A00D-1687-49CA-A605-B1D57C154BF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF03A00D-1687-49CA-A605-B1D57C154BF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF03A00D-1687-49CA-A605-B1D57C154BF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF03A00D-1687-49CA-A605-B1D57C154BF5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
