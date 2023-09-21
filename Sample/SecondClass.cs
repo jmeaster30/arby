@@ -1,4 +1,4 @@
-using arby;
+using Arby;
 
 namespace Sample;
 

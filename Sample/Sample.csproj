@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Arby.Lib\arby.csproj" />
+      <ProjectReference Include="..\Arby\Arby.csproj" />
     </ItemGroup>
 
 </Project>
