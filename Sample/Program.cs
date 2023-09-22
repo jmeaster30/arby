@@ -19,7 +19,11 @@ Console.WriteLine(ArbySerializer.Serialize(new MyClass
     Option = "alpha",
     SecondO = new List<SecondClass>
     {
-        new SecondClass { What = 13.12, IncredibleString = "good" },
+        new SecondClass { What = 13.12, IncredibleString = "good", Other = new SecondClass
+        {
+            IncredibleString = "Wow!!!!!",
+            What = 5432,
+        } },
         new SecondClass { What = 1234, IncredibleString = "oh my god this is working :)"}
     }
 }, new ArbySerializerOptions { IndentCharacter = IndentCharacter.Space, IndentSize = 2 }));

@@ -27,7 +27,7 @@ public static class ArbySerializer
         return SerializeInternal(o, 0, 0, options);
     }
 
-    private static string GenIndentation(int level, ArbySerializerOptions? options)
+    private static string GenIndentation(int level, int offset, ArbySerializerOptions? options)
     {
         var result = "";
         for(var i = 0; i < level; i++)
@@ -43,20 +43,22 @@ public static class ArbySerializer
             }
         }
 
+        for (var i = 0; i < offset; i++)
+        {
+            result += " ";
+        }
+
         return result;
     }
 
     private static string SerializeInternal(object o, int level, int offset, ArbySerializerOptions? options = null)
     {
-        var result = GenIndentation(level, options);
-
         switch (o)
         {
             case null:
-                result += "null";
-                break;
+                return "null";
             case ValueType or string:
-                result += o switch
+                return o switch
                 {
                     string s => Serialize(s, options),
                     sbyte s => Serialize(s, options),
@@ -75,47 +77,56 @@ public static class ArbySerializer
                     Enum e => Serialize(e, options),
                     _ => throw new NotImplementedException($"WE GOT HERE {o.GetType()}")
                 };
-                break;
             case IEnumerable enumerable:
             {
                 // TODO resetting here feels odd but it shouldn't cause issues.
-                result = "";
-                foreach(var value in enumerable)
+                var result = "";
+                var values = enumerable.GetEnumerator();
+                if (!values.MoveNext()) break;
+
+                var current = values.Current;
+
+                while (values.MoveNext())
                 {
-                    result += GenIndentation(level, options);
-                    result += "- " + SerializeInternal(value, 0, 2, options) + "\n";
+                    result += GenIndentation(level, offset, options);
+                    result += "- " + SerializeInternal(current, level, 2, options) + "\n";
+                    current = values.Current;
                 }
 
-                break;
+                result += GenIndentation(level, offset, options);
+                result += "- " + SerializeInternal(current, level, 2, options);
+
+                return result;
             }
             default:
             {
-                result = "";
-                foreach (var member in o.GetType().GetMembers())
+                var result = "";
+                var first = true;
+                var members = o.GetType().GetMembers();
+                for (var i = 0; i < members.Length; i++)
                 {
+                    var member = members[i];
+                    
                     if (member.CustomAttributes.Any(x => x.AttributeType == typeof(ExcludeAttribute)) ||
                         member.MemberType is not MemberTypes.Property) continue;
-                    
-                    result += GenIndentation(level, options);
 
-                    for (var i = 0; i < offset; i++)
-                    {
-                        result += " ";
-                    }
-                        
+                    result += first ? "" : GenIndentation(level, offset, options);
                     result += $"{member.Name}: ";
                     var propertyValue = ((PropertyInfo)member).GetValue(o);
                     result += propertyValue switch
                     {
-                        ValueType or string => Serialize(propertyValue, options),
-                        _ => $"\n{SerializeInternal(propertyValue, level + 1, offset, options)}"
+                        ValueType or string or null => Serialize(propertyValue, options),
+                        _ => $"\n{(first ? "" : GenIndentation(level, offset, options))}{SerializeInternal(propertyValue, level + 1, offset, options)}"
                     };
-                    result += "\n";
+                    result += i == members.Length - 1 ? "" : "\n";
+
+                    if (first) first = !first;
                 }
-                break;
+
+                return result;
             }
         }
 
-        return result;
+        throw new NotImplementedException($"WE GOT HERE!!! <{o.GetType()}> {o}");
     }
 }
