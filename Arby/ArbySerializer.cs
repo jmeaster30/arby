@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Reflection;
-using System.Text.Json;
+using System.Runtime.CompilerServices;
 
 namespace Arby;
 
@@ -57,6 +57,24 @@ public static class ArbySerializer
         {
             case null:
                 return "null";
+            case ITuple tuple:
+            {
+                var result = "";
+
+                if (tuple.Length == 0)
+                    return result;
+                
+                for (var i = 0; i < tuple.Length - 1; i++)
+                {
+                    result += GenIndentation(level, offset, options);
+                    result += "- " + SerializeInternal(tuple[i], level, 2, options) + "\n";
+                }
+
+                result += GenIndentation(level, offset, options);
+                result += "- " + SerializeInternal(tuple[tuple.Length - 1], level, 2, options);
+
+                return result;
+            }
             case ValueType or string:
                 return o switch
                 {
@@ -79,7 +97,6 @@ public static class ArbySerializer
                 };
             case IEnumerable enumerable:
             {
-                // TODO resetting here feels odd but it shouldn't cause issues.
                 var result = "";
                 var values = enumerable.GetEnumerator();
                 if (!values.MoveNext()) break;
