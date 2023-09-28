@@ -1,4 +1,4 @@
-namespace Arby;
+namespace Arby.Attributes;
 
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class OverrideSerializerAttribute : Attribute

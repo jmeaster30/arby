@@ -1,8 +1,10 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Text.Json;
 using Arby;
 using Sample;
 
+Console.WriteLine(">>>> Serialize");
 Console.WriteLine(ArbySerializer.Serialize(1234));
 Console.WriteLine(ArbySerializer.Serialize(true));
 Console.WriteLine(ArbySerializer.Serialize("this is a test"));
@@ -29,3 +31,13 @@ Console.WriteLine(ArbySerializer.Serialize(new MyClass
         new() { What = 1234, IncredibleString = "oh my god this is working :)"}
     }
 }, new ArbySerializerOptions { IndentCharacter = IndentCharacter.Space, IndentSize = 2 }));
+
+Console.WriteLine("\n>>>> Deserialize");
+Console.WriteLine(JsonSerializer.Serialize(ArbyDeserializer.Deserialize<int>("1234")));
+Console.WriteLine(JsonSerializer.Serialize(ArbyDeserializer.Deserialize<MyClass>(ArbySerializer.Serialize(new MyClass
+{
+    Field1 = "OH WOW",
+    ImportantEnum = MyEnum.WAAA,
+    Ignored = true,
+    Option = "alpha",
+}, new ArbySerializerOptions { IndentCharacter = IndentCharacter.Space, IndentSize = 2 }))));

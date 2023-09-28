@@ -1,4 +1,5 @@
 using Arby;
+using Arby.Attributes;
 
 namespace Sample;
 
